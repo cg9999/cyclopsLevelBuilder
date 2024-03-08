@@ -37,7 +37,7 @@ func _init():
 
 #Add blocks to be moved here
 func add_block(block_path:NodePath):
-	
+
 	var block:CyclopsBlock = builder.get_node(block_path)
 	var tracked:TrackedBlock = TrackedBlock.new(block)
 	tracked_blocks.append(tracked)
@@ -47,30 +47,30 @@ func move_to(offset:Vector3):
 	for tracked in tracked_blocks:
 		var block:CyclopsBlock = builder.get_node(tracked.path)
 		var w_init_xform:Transform3D = tracked.world_xform
-		
+
 		var new_w_xform:Transform3D = w_init_xform.translated(offset)
 		block.global_transform = new_w_xform
-		
-		
+
+
 func do_it():
 	for tracked in tracked_blocks:
 		var block:CyclopsBlock = builder.get_node(tracked.path)
 		var w_init_xform:Transform3D = tracked.world_xform
-		
+
 		var new_w_xform:Transform3D = transform * w_init_xform
 		block.global_transform = new_w_xform
-		
-		#if !lock_uvs:
-			#var vol:ConvexVolume = ConvexVolume.new()
-			#vol.init_from_convex_block_data(tracked.data)
-			#
-			#var uv_xform:Transform3D = transform.affine_inverse()
-			#vol.transform_uvs(uv_xform)
-			#
-			#block.block_data = vol.to_convex_block_data()
+
+		if !lock_uvs:
+			var vol:ConvexVolume = ConvexVolume.new()
+			vol.init_from_convex_block_data(tracked.data)
+
+			var uv_xform:Transform3D = transform.affine_inverse()
+			vol.transform_uvs(uv_xform)
+
+			block.block_data = vol.to_convex_block_data()
 
 func undo_it():
 	for tracked in tracked_blocks:
 		var block:CyclopsBlock = builder.get_node(tracked.path)
 		block.global_transform = tracked.world_xform
-	
+
